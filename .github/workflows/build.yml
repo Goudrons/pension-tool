@@ -31,6 +31,7 @@ jobs:
         echo 'AppVersion=3.0' >> installer.iss
         echo 'DefaultDirName={autopf}\Schweizer Pension Tool' >> installer.iss
         echo 'DefaultGroupName=Schweizer Pension Tool' >> installer.iss
+        echo 'OutputDir=output' >> installer.iss
         echo 'OutputBaseFilename=Schweizer-Pension-Tool-Setup' >> installer.iss
         echo 'Compression=lzma' >> installer.iss
         echo 'SolidCompression=yes' >> installer.iss
@@ -49,4 +50,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Schweizer-Pension-Tool-Windows-Setup
-        path: Schweizer-Pension-Tool-Setup.exe
+        path: output/Schweizer-Pension-Tool-Setup.exe
