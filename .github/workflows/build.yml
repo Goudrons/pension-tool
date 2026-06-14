@@ -1,0 +1,28 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Python installieren
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Dependencies installieren
+      run: pip install flask werkzeug pyinstaller
+    
+    - name: EXE bauen
+      run: pyinstaller --onedir --windowed --name "Schweizer Pension Tool" --add-data "favicon.png;." app_desktop2.py
+    
+    - name: EXE hochladen
+      uses: actions/upload-artifact@v3
+      with:
+        name: Schweizer-Pension-Tool-Windows
+        path: dist/Schweizer Pension Tool/
