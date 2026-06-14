@@ -20,9 +20,33 @@ jobs:
     
     - name: EXE bauen
       run: pyinstaller --onedir --windowed --name "Schweizer Pension Tool" --add-data "favicon.png;." app_desktop2.py
-    
-    - name: EXE hochladen
+
+    - name: Inno Setup installieren
+      run: choco install innosetup -y
+
+    - name: Installer Script erstellen
+      run: |
+        echo '[Setup]' > installer.iss
+        echo 'AppName=Schweizer Pension Tool' >> installer.iss
+        echo 'AppVersion=3.0' >> installer.iss
+        echo 'DefaultDirName={autopf}\Schweizer Pension Tool' >> installer.iss
+        echo 'DefaultGroupName=Schweizer Pension Tool' >> installer.iss
+        echo 'OutputBaseFilename=Schweizer-Pension-Tool-Setup' >> installer.iss
+        echo 'Compression=lzma' >> installer.iss
+        echo 'SolidCompression=yes' >> installer.iss
+        echo '[Files]' >> installer.iss
+        echo 'Source: "dist\Schweizer Pension Tool\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs' >> installer.iss
+        echo '[Icons]' >> installer.iss
+        echo 'Name: "{group}\Schweizer Pension Tool"; Filename: "{app}\Schweizer Pension Tool.exe"' >> installer.iss
+        echo 'Name: "{commondesktop}\Schweizer Pension Tool"; Filename: "{app}\Schweizer Pension Tool.exe"' >> installer.iss
+        echo '[Run]' >> installer.iss
+        echo 'Filename: "{app}\Schweizer Pension Tool.exe"; Description: "Jetzt starten"; Flags: postinstall nowait' >> installer.iss
+
+    - name: Installer bauen
+      run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss'
+
+    - name: Installer hochladen
       uses: actions/upload-artifact@v4
       with:
-        name: Schweizer-Pension-Tool-Windows
-        path: dist/Schweizer Pension Tool/
+        name: Schweizer-Pension-Tool-Windows-Setup
+        path: Schweizer-Pension-Tool-Setup.exe
