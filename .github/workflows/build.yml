@@ -8,21 +8,21 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Python installieren
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
     
     - name: Dependencies installieren
-      run: pip install flask werkzeug pyinstaller
+      run: pip install flask werkzeug pyinstaller pywebview
     
     - name: EXE bauen
       run: pyinstaller --onedir --windowed --name "Schweizer Pension Tool" --add-data "favicon.png;." app_desktop2.py
     
     - name: EXE hochladen
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Schweizer-Pension-Tool-Windows
         path: dist/Schweizer Pension Tool/
