@@ -16,10 +16,13 @@ jobs:
         python-version: '3.11'
     
     - name: Dependencies installieren
-      run: pip install flask werkzeug pyinstaller pywebview
+      run: pip install flask werkzeug pyinstaller pywebview pillow
     
+    - name: PNG zu ICO konvertieren
+      run: python -c "from PIL import Image; img = Image.open('favicon.png'); img.save('favicon.ico', format='ICO', sizes=[(16,16),(32,32),(48,48),(64,64),(128,128),(256,256)])"
+
     - name: EXE bauen
-      run: pyinstaller --onedir --windowed --name "Schweizer Pension Tool" --add-data "favicon.png;." app_desktop2.py
+      run: pyinstaller --onedir --windowed --name "Schweizer Pension Tool" --icon "favicon.ico" --add-data "favicon.png;." app_desktop2.py
 
     - name: Inno Setup installieren
       run: choco install innosetup -y
