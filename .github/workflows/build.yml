@@ -13,7 +13,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Dependencies installieren
-        run: pip install flask pyinstaller pillow
+        run: pip install flask pyinstaller pillow pywebview
       - name: PNG zu ICO konvertieren
         run: python -c "from PIL import Image; img = Image.open('favicon.png'); img.save('favicon.ico', format='ICO', sizes=[(16,16),(32,32),(48,48),(64,64),(128,128),(256,256)])"
       - name: EXE bauen
@@ -26,7 +26,8 @@ jobs:
           echo 'AppName=Schweizer Pension Tool' >> setup.iss
           echo 'AppVersion=4.0' >> setup.iss
           echo 'DefaultDirName={autopf}\Schweizer Pension Tool' >> setup.iss
-          echo 'DefaultGroupName=Schweizer Pension Tool' >> setup.iss
+          echo 'DefaultGroupName=Schweizer Pension Tool
+DisableDirPage=no' >> setup.iss
           echo 'OutputBaseFilename=Schweizer-Pension-Tool-Setup' >> setup.iss
           echo 'OutputDir=.' >> setup.iss
           echo '[Files]' >> setup.iss
