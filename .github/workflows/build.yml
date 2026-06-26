@@ -8,36 +8,50 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Dependencies installieren
-        run: pip install flask pyinstaller pillow pywebview
-      - name: PNG zu ICO konvertieren
-        run: python -c "from PIL import Image; img = Image.open('favicon.png'); img.save('favicon.ico', format='ICO', sizes=[(16,16),(32,32),(48,48),(64,64),(128,128),(256,256)])"
-      - name: EXE bauen
-        run: pyinstaller --onefile --windowed --icon=favicon.ico --name="Schweizer-Pension-Tool" app_desktop4.py
-      - name: Inno Setup installieren
-        run: choco install innosetup -y
-      - name: Installer bauen
-        run: |
-          echo '[Setup]' > setup.iss
-          echo 'AppName=Schweizer Pension Tool' >> setup.iss
-          echo 'AppVersion=4.0' >> setup.iss
-          echo 'DefaultDirName={autopf}\Schweizer Pension Tool' >> setup.iss
-          echo 'DefaultGroupName=Schweizer Pension Tool' >> setup.iss
-          echo 'DisableDirPage=no' >> setup.iss
-          echo 'OutputBaseFilename=Schweizer-Pension-Tool-Setup' >> setup.iss
-          echo 'OutputDir=.' >> setup.iss
-          echo '[Files]' >> setup.iss
-          echo 'Source: "dist\Schweizer-Pension-Tool.exe"; DestDir: "{app}"' >> setup.iss
-          echo '[Icons]' >> setup.iss
-          echo 'Name: "{group}\Schweizer Pension Tool"; Filename: "{app}\Schweizer-Pension-Tool.exe"' >> setup.iss
-          echo 'Name: "{commondesktop}\Schweizer Pension Tool"; Filename: "{app}\Schweizer-Pension-Tool.exe"' >> setup.iss
-          iscc setup.iss
-      - name: Artifact hochladen
-        uses: actions/upload-artifact@v4
-        with:
-          name: Schweizer-Pension-Tool-Setup
-          path: Schweizer-Pension-Tool-Setup.exe
+    - uses: actions/checkout@v4
+    
+    - name: Python installieren
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Dependencies installieren
+      run: pip install flask werkzeug pyinstaller pywebview pillow
+    
+    - name: PNG zu ICO konvertieren
+      run: python -c "from PIL import Image; img = Image.open('favicon.png'); img.save('favicon.ico', format='ICO', sizes=[(16,16),(32,32),(48,48),(64,64),(128,128),(256,256)])"
+
+    - name: EXE bauen
+      run: pyinstaller --onedir --windowed --name "Schweizer Pension Tool" --icon "favicon.ico" --add-data "favicon.png;." app_desktop4.py
+
+    - name: Inno Setup installieren
+      run: choco install innosetup -y
+
+    - name: Installer Script erstellen
+      run: |
+          echo '[Setup]' > installer.iss
+          echo 'AppName=Schweizer Pension Tool' >> installer.iss
+          echo 'AppVersion=4.0' >> installer.iss
+          echo 'DefaultDirName={autopf}\Schweizer Pension Tool' >> installer.iss
+          echo 'DefaultGroupName=Schweizer Pension Tool' >> installer.iss
+          echo 'DisableDirPage=no' >> installer.iss
+          echo 'OutputDir=output' >> installer.iss
+          echo 'OutputBaseFilename=Schweizer-Pension-Tool-Setup' >> installer.iss
+          echo 'Compression=lzma' >> installer.iss
+          echo 'SolidCompression=yes' >> installer.iss
+          echo '[Files]' >> installer.iss
+          echo 'Source: "dist\Schweizer Pension Tool\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs' >> installer.iss
+          echo '[Icons]' >> installer.iss
+          echo 'Name: "{group}\Schweizer Pension Tool"; Filename: "{app}\Schweizer Pension Tool.exe"' >> installer.iss
+          echo 'Name: "{commondesktop}\Schweizer Pension Tool"; Filename: "{app}\Schweizer Pension Tool.exe"' >> installer.iss
+          echo '[Run]' >> installer.iss
+          echo 'Filename: "{app}\Schweizer Pension Tool.exe"; Description: "Jetzt starten"; Flags: postinstall nowait' >> installer.iss
+
+    - name: Installer bauen
+      run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss'
+
+    - name: Installer hochladen
+      uses: actions/upload-artifact@v4
+      with:
+        name: Schweizer-Pension-Tool-Windows-Setup
+        path: output/Schweizer-Pension-Tool-Setup.exe
