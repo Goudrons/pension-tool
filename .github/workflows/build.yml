@@ -35,10 +35,8 @@ jobs:
           echo 'Name: "{group}\Schweizer Pension Tool"; Filename: "{app}\Schweizer-Pension-Tool.exe"' >> setup.iss
           echo 'Name: "{commondesktop}\Schweizer Pension Tool"; Filename: "{app}\Schweizer-Pension-Tool.exe"' >> setup.iss
           iscc setup.iss
-      - name: Release erstellen
-        uses: softprops/action-gh-release@v1
+      - name: Artifact hochladen
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: V4.0
-          files: Schweizer-Pension-Tool-Setup.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: Schweizer-Pension-Tool-Setup
+          path: Schweizer-Pension-Tool-Setup.exe
