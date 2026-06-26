@@ -26,8 +26,8 @@ jobs:
           echo 'AppName=Schweizer Pension Tool' >> setup.iss
           echo 'AppVersion=4.0' >> setup.iss
           echo 'DefaultDirName={autopf}\Schweizer Pension Tool' >> setup.iss
-          echo 'DefaultGroupName=Schweizer Pension Tool
-DisableDirPage=no' >> setup.iss
+          echo 'DefaultGroupName=Schweizer Pension Tool' >> setup.iss
+          echo 'DisableDirPage=no' >> setup.iss
           echo 'OutputBaseFilename=Schweizer-Pension-Tool-Setup' >> setup.iss
           echo 'OutputDir=.' >> setup.iss
           echo '[Files]' >> setup.iss
